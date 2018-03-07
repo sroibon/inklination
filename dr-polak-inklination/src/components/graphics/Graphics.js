@@ -26,6 +26,7 @@ class Graphics extends React.Component {
             showAddDropsWarning: true,
             showAngleActions: false,
             showAngleRePlaceWarning: false,
+            isAngleFlipped: false,
         };
 
         // methods binding.
@@ -51,6 +52,13 @@ class Graphics extends React.Component {
                 stroke: '#222222',
                 strokeWidth: 2,
                 draggable: true,
+                dragBoundFunc: function(pos) {
+                    var newX = pos.x > window.innerWidth ? window.innerWidth : pos.x;
+                    return {
+                        x: newX,
+                        y: pos.y,
+                    };
+                }
             })
         };
         
@@ -81,7 +89,6 @@ class Graphics extends React.Component {
     }
 
     setDropsPosition(position) {
-        console.log(`Drop #: ${this.state.maxTeardrops}`);
         if (this.state.maxTeardrops === 2) {
             this.setState({
                 drop2Position: position,
@@ -167,9 +174,22 @@ class Graphics extends React.Component {
         });
     }
 
-    addAngleLine() {
+    addAngleLine(angleHasRotation) {
         const line = this.state.stage.find('#teardropLine')[0];
         const currentAngleLine = this.state.stage.find('#angleLine')[0];
+
+        let degrees = this.state.angleDegrees;
+        if (!angleHasRotation) {
+            degrees = 180 - this.state.angleDegrees;
+            this.setState({
+                isAngleFlipped: true,
+            });
+        } else {
+            degrees = degrees;
+            this.setState({
+                isAngleFlipped: false,
+            });
+        }
 
         if (currentAngleLine) {
             currentAngleLine.destroy();
@@ -189,8 +209,7 @@ class Graphics extends React.Component {
         const startingAngleLinePointX = (startingPosX + startingPosX2) / 2;
         const startingAngleLinePointY = (startingPosY + startingPosY2) / 2;
 
-        const lineLength = 400;
-        const degrees = this.state.angleDegrees;
+        const lineLength = 250;
         const endingPointAngleLineX = startingAngleLinePointX - (lineLength * Math.cos(Math.PI * degrees / 180));
         const endingPointAngleLineY = startingAngleLinePointY - (lineLength * Math.sin(Math.PI * degrees / 180));
 
@@ -213,11 +232,13 @@ class Graphics extends React.Component {
 
         this.state.layer.add(angleLine);
         this.state.stage.add(this.state.layer);
+        this.state.stage.draw();
 
         this.setState({
             isAngleLinePlace: true,
             showAngleRePlaceWarning: false,
         });
+
     }
 
     onChangeAngle(event) {
@@ -227,11 +248,18 @@ class Graphics extends React.Component {
     }
 
     rotateAngle() {
-        const angleLine = this.state.stage.find('#angleLine')[0];
-        console.log(angleLine);
-        //  TODO: fix rotation
-        angleLine.rotate(45);
-        this.state.stage.draw();
+        const isFlipped = this.state.isAngleFlipped;
+
+        this.addAngleLine(isFlipped);
+        if (isFlipped) {
+            this.setState({
+                isAngleFlipped: false,
+            });
+        } else {
+            this.setState({
+                isAngleFlipped: true,
+            });
+        }
     }
 
     onAngleDragging() {
@@ -259,7 +287,7 @@ class Graphics extends React.Component {
             </div>
             <div className="angle-buttons">
                 <button onClick={this.addAngleLine}>Place angle</button>
-                <button onClick={this.rotateAngle}>Rotate angle</button>
+                <button onClick={this.rotateAngle}>Flip angle</button>
             </div>
         </div>;
         // handle drops dragging and line placement while dragging.

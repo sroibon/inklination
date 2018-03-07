@@ -75,7 +75,6 @@ class ImageCapture extends React.Component {
     }
 
     keepImage() {
-        console.log('Keep image');
         this.setState({
             showWebcam: false,
             add2DCanvas: true,
@@ -99,7 +98,7 @@ class ImageCapture extends React.Component {
     }
 
     reStart() {
-        // TODO get initial state.
+        window.location.reload();
     }
 
     render() {
@@ -132,9 +131,6 @@ class ImageCapture extends React.Component {
             </div>
             <div className="photo" ref={(photo) => { this.photo = photo; }}>
                 {this.state.screenshot && this.state.showPhoto ? image : null}
-                {/* <div id="graphics-container">
-                    {this.state.add2DCanvas ? <Graphics /> : null}
-                </div> */}
             </div>
             <div id="graphics-container">
                     {this.state.add2DCanvas ? <Graphics /> : null}
