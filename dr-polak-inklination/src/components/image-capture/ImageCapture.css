@@ -1,0 +1,19 @@
+.photo img.inverted {
+    -webkit-filter: invert(1);
+    filter: invert(1);
+}
+
+.photo img {
+    height: 100%;
+}
+
+.buttons {
+    margin-top: 20px;
+    position: relative;
+}
+
+#graphics-container {
+    position: absolute;
+    top: 140px;
+    height: 484px;
+}
