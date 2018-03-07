@@ -1,0 +1,49 @@
+.graphics-buttons {
+    position: relative;
+    margin-right: 15px;
+}
+
+.angle-input {
+    height: 50px;
+    background-color: #222222;
+    border-radius: 5px;
+    margin: 10px 5px 5px;
+    width: auto;
+}
+
+.angle-input label {
+    background-color: #222222;
+    border-radius: 5px;
+    margin: 10px -3px 5px;
+    width: 100%;
+    padding: 0 0 40px;
+    text-align: left;
+    float: left;
+    border: none;
+    font-size: 22px;
+    color: #FFFFFF;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.angle-input input {
+    position: relative;
+    left: -4px;
+    background-color: #222222;
+    border: 1px solid white;
+    outline: none;
+    color: #FFFFFF;
+    font-size: 22px;
+    width: 130px;
+    height: 40px;
+    text-align: left;
+    padding-left: 7px;
+    font-weight: bold;
+    float: left;
+    top: -38px;
+}
+
+.clearfix {
+    clear: both;
+}

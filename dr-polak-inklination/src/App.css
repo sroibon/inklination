@@ -14,6 +14,11 @@
   color: white;
 }
 
+.App-header p {
+  font-size: 12px;
+  text-align: left;
+}
+
 .App-title {
   font-size: 1.5em;
 }

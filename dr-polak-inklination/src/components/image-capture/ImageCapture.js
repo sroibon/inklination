@@ -22,6 +22,7 @@ class ImageCapture extends React.Component {
           areColorsInverted: false,
           showWebcam: true,
           add2DCanvas: false,
+          showInvertButton: false,
         };
     }
 
@@ -37,10 +38,11 @@ class ImageCapture extends React.Component {
             showPhoto: true,
             showCaptureButton: false,
             showKeepImageButton: true,
-            showClearImageButton: true,
+            showClearImageButton: false,
             showWebcam: false,
             invertedClassName: '',
             areColorsInverted: false,
+            showInvertButton: true,
         });
     }
 
@@ -52,6 +54,7 @@ class ImageCapture extends React.Component {
             showRetakeButton: false,
             showKeepImageButton: false,
             showClearImageButton: false,
+            showInvertButton: false,
         });
     }
 
@@ -76,6 +79,7 @@ class ImageCapture extends React.Component {
             showWebcam: false,
             add2DCanvas: true,
             showKeepImageButton: false,
+            showRetakeButton: false,
         });
 
     }
@@ -107,19 +111,22 @@ class ImageCapture extends React.Component {
             height={this.state.cameraSize}
         />;
         return <div id="image-capture">
-            <div className="photo" ref={(photo) => { this.photo = photo; }}>
-                {this.state.screenshot && this.state.showPhoto ? image : null}
-                <div id="graphics-container">
-                    {this.state.add2DCanvas ? <Graphics /> : null}
-                </div>
-            </div>
             <div className="buttons">
                 {this.state.showWebcam ? webCam : null}
                 {this.state.showCaptureButton ? captureButton : null}
                 {this.state.showRetakeButton ? retakeButton : null}
-                {this.state.showRetakeButton ? invertColorsButton : null}
+                {this.state.showInvertButton ? invertColorsButton : null}
                 {this.state.showKeepImageButton ? keepImageButton : null}
                 {this.state.showClearImageButton ? clearButton : null}
+            </div>
+            <div className="photo" ref={(photo) => { this.photo = photo; }}>
+                {this.state.screenshot && this.state.showPhoto ? image : null}
+                {/* <div id="graphics-container">
+                    {this.state.add2DCanvas ? <Graphics /> : null}
+                </div> */}
+            </div>
+            <div id="graphics-container">
+                    {this.state.add2DCanvas ? <Graphics /> : null}
             </div>
         </div>
   }

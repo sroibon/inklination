@@ -5,7 +5,7 @@ function Header(props) {
     <header className="App-header">
         <h1 className="App-title">Inklination ></h1>
             <p className="App-intro">
-                Dr.'s Polak Inklination angle app.
+                Hip replacement, inklination angle test.
             </p>
     </header>;
     return header;
