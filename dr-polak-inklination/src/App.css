@@ -10,7 +10,7 @@
 .App-header {
   background-color: #222;
   height: auto;
-  padding: 20px;
+  padding: 20px 20px 0;
   color: white;
 }
 
@@ -20,7 +20,13 @@
 }
 
 .App-title {
-  font-size: 1.5em;
+  font-size: 2.5em;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.App-title span {
+  font-weight: lighter;
 }
 
 .App-intro {

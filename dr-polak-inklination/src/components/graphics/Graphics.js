@@ -23,6 +23,9 @@ class Graphics extends React.Component {
             areCirclesPlaced: false,
             angleDegrees: 0,
             isAngleLinePlace: false,
+            showAddDropsWarning: true,
+            showAngleActions: false,
+            showAngleRePlaceWarning: false,
         };
 
         // methods binding.
@@ -34,6 +37,7 @@ class Graphics extends React.Component {
         this.addAngleLine = this.addAngleLine.bind(this);
         this.rotateAngle = this.rotateAngle.bind(this);
         this.onAngleDragging = this.onAngleDragging.bind(this);
+        this.showAngleActions = this.showAngleActions.bind(this);
 
         const stage = this.state.stage;
         const layer = this.state.layer;
@@ -42,9 +46,9 @@ class Graphics extends React.Component {
             return new Konva.Circle({
                 x: x,
                 y: y,
-                radius: 70,
-                fill: 'red',
-                stroke: 'black',
+                radius: 8,
+                fill: '#00a9ca',
+                stroke: '#222222',
                 strokeWidth: 2,
                 draggable: true,
             })
@@ -54,6 +58,9 @@ class Graphics extends React.Component {
 
         // Add listener to canvas, desktop and mobile.
         stage.on('contentClick contentTouchstart', () => {
+            this.setState({
+                showAddDropsWarning: false,
+            });
             this.teardropCounter();
             const position = stage.getPointerPosition();
             stage.add(layer);
@@ -62,6 +69,7 @@ class Graphics extends React.Component {
             if (this.state.maxTeardrops === 2) {
                 this.createTeardropline();
                 this.unbindEvent(stage);
+                this.showAngleActions();
             }
         });
     }
@@ -98,11 +106,12 @@ class Graphics extends React.Component {
         if (Object.keys(drop1Position).length !== 0 && Object.keys(drop2Position).length !== 0) {
             line = new Konva.Line({
                 points: [x1, y1, x2, y2],
-                stroke: 'blue',
-                strokeWidth: 15,
+                stroke: '#00a9ca',
+                strokeWidth: 4,
                 lineCap: 'round',
                 lineJoin: 'round',
                 id: 'teardropLine',
+                dash: [3, 10],
             });
         } else {
             console.warn('To create a line positions must not be empty object.');
@@ -148,16 +157,28 @@ class Graphics extends React.Component {
                 angleLine.setPoints([x1, y1, x1, y1]);
             }
         });
+
+        // TODO: add showAngleRePlaceWarning() on drag stop for both teardrops.
+    }
+
+    showAngleRePlaceWarning() {
+        this.setState({
+            showAngleRePlaceWarning: true,
+        });
     }
 
     addAngleLine() {
-        console.log('Add angle');
         const line = this.state.stage.find('#teardropLine')[0];
         const currentAngleLine = this.state.stage.find('#angleLine')[0];
-        console.log(line);
 
         if (currentAngleLine) {
             currentAngleLine.destroy();
+            this.showAngleRePlaceWarning();
+            if (this.state.isAngleLinePlace) {
+                this.setState({
+                    isAngleLinePlace: false,
+                });
+            }
         }
 
         const startingPosX = line.attrs.points[0];
@@ -168,15 +189,15 @@ class Graphics extends React.Component {
         const startingAngleLinePointX = (startingPosX + startingPosX2) / 2;
         const startingAngleLinePointY = (startingPosY + startingPosY2) / 2;
 
-        const lineLength = 500;
+        const lineLength = 400;
         const degrees = this.state.angleDegrees;
         const endingPointAngleLineX = startingAngleLinePointX - (lineLength * Math.cos(Math.PI * degrees / 180));
         const endingPointAngleLineY = startingAngleLinePointY - (lineLength * Math.sin(Math.PI * degrees / 180));
 
         const angleLine = new Konva.Line({
             points: [startingAngleLinePointX, startingAngleLinePointY, endingPointAngleLineX, endingPointAngleLineY],
-            stroke: 'green',
-            strokeWidth: 15,
+            stroke: '#49ca00',
+            strokeWidth: 4,
             lineCap: 'round',
             lineJoin: 'round',
             id: 'angleLine',
@@ -187,6 +208,7 @@ class Graphics extends React.Component {
                     y: this.state.stage.find('#teardropLine')[0].getAbsolutePosition().y,
                 }
             },
+            dash: [3, 10],
         });
 
         this.state.layer.add(angleLine);
@@ -194,11 +216,11 @@ class Graphics extends React.Component {
 
         this.setState({
             isAngleLinePlace: true,
+            showAngleRePlaceWarning: false,
         });
     }
 
     onChangeAngle(event) {
-        console.log(event.currentTarget.value);
         this.setState({
             angleDegrees: event.currentTarget.value,
         });
@@ -207,7 +229,8 @@ class Graphics extends React.Component {
     rotateAngle() {
         const angleLine = this.state.stage.find('#angleLine')[0];
         console.log(angleLine);
-        angleLine.rotation(180);
+        //  TODO: fix rotation
+        angleLine.rotate(45);
         this.state.stage.draw();
     }
 
@@ -219,7 +242,26 @@ class Graphics extends React.Component {
         });
     }
 
+    showAngleActions() {
+        this.setState({
+            showAngleActions: true,
+        });
+    }
+
     render() {
+        const addDropsWarning = <div className="notifications">Please, add teardrops by touching the image.</div>;
+        const placeAngleWarning = <div className="notifications">Please, re place your Inklination angle line.</div>;
+        const angleActions = <div className="graphics-buttons buttons">
+            <div className="angle-input">
+                <label>Add angle degrees:</label>
+                <input type="text" onChange={this.onChangeAngle} />
+                <div className="clearfix"></div>
+            </div>
+            <div className="angle-buttons">
+                <button onClick={this.addAngleLine}>Place angle</button>
+                <button onClick={this.rotateAngle}>Rotate angle</button>
+            </div>
+        </div>;
         // handle drops dragging and line placement while dragging.
         if (this.state.areCirclesPlaced) {
             const circles = this.state.stage.find('Circle');
@@ -229,16 +271,10 @@ class Graphics extends React.Component {
         if (this.state.isAngleLinePlace) {
             this.onAngleDragging();
         }
-        return <div className="graphics-buttons buttons">
-                <div className="angle-input">
-                    <label>Add angle degrees:</label>
-                    <input type="text" onChange={this.onChangeAngle} />
-                    <div className="clearfix"></div>
-                </div>
-                <div className="angle-buttons">
-                    <button onClick={this.addAngleLine}>Place angle</button>
-                    <button onClick={this.rotateAngle}>Rotate angle</button>
-                </div>
+        return <div>
+                {!this.state.isAngleLinePlace && !this.state.showAddDropsWarning && this.state.showAngleRePlaceWarning ? placeAngleWarning: null}
+                {this.state.showAddDropsWarning ? addDropsWarning : null}
+                {this.state.showAngleActions ? angleActions : null}
             </div>; 
     }
 }

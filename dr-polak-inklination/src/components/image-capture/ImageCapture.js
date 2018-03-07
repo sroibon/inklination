@@ -23,6 +23,7 @@ class ImageCapture extends React.Component {
           showWebcam: true,
           add2DCanvas: false,
           showInvertButton: false,
+          showRestartButton: false,
         };
     }
 
@@ -80,6 +81,7 @@ class ImageCapture extends React.Component {
             add2DCanvas: true,
             showKeepImageButton: false,
             showRetakeButton: false,
+            showRestartButton: true,
         });
 
     }
@@ -96,9 +98,17 @@ class ImageCapture extends React.Component {
         });
     }
 
+    reStart() {
+        // TODO get initial state.
+    }
+
     render() {
-        const captureButton = <button onClick={this.capturePhoto.bind(this)}>Take photo</button>;
+        const captureButton = () => {
+            //  TODO: add timeout.
+            return <button onClick={this.capturePhoto.bind(this)}>Take photo</button>;
+        };
         const retakeButton = <button onClick={this.retakePhoto.bind(this)}>Retake Photo</button>;
+        const reStartButton = <button onClick={this.reStart.bind(this)}>Re start</button>;
         const invertColorsButton = <button onClick={this.invertColors.bind(this)}>Invert colors</button>;
         const clearButton = <button onClick={this.clearImage.bind(this)}>Clear image</button>;
         const keepImageButton = <button onClick={this.keepImage.bind(this)}>Ok, keep this one</button>;
@@ -113,11 +123,12 @@ class ImageCapture extends React.Component {
         return <div id="image-capture">
             <div className="buttons">
                 {this.state.showWebcam ? webCam : null}
-                {this.state.showCaptureButton ? captureButton : null}
+                {this.state.showCaptureButton ? captureButton() : null}
                 {this.state.showRetakeButton ? retakeButton : null}
                 {this.state.showInvertButton ? invertColorsButton : null}
                 {this.state.showKeepImageButton ? keepImageButton : null}
                 {this.state.showClearImageButton ? clearButton : null}
+                {this.state.showRestartButton ? reStartButton : null}
             </div>
             <div className="photo" ref={(photo) => { this.photo = photo; }}>
                 {this.state.screenshot && this.state.showPhoto ? image : null}

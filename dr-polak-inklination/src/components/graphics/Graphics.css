@@ -47,3 +47,12 @@
 .clearfix {
     clear: both;
 }
+
+.notifications {
+    color: #FFFFFF;
+    font-size: 26px;
+    height: auto;
+    padding: 10px;
+    position: relative;
+    top: 10px;
+}
