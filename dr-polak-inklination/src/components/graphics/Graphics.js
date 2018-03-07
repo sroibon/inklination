@@ -1,6 +1,5 @@
 import React from 'react';
 import Konva from 'konva';
-import Teardrop from '../teardrop/Teardrop';
 
 
 import './Graphics.css'
@@ -123,10 +122,6 @@ class Graphics extends React.Component {
     */
     unbindEvent(stage) {
         stage.off('contentClick contentTouchstart');
-    }
-
-    addAngleLine() {
-        // TODO:
     }
 
     getDragging(circles, line) {
